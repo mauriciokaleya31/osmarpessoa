@@ -1,164 +1,394 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Reserva Webinar CX</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+    :root{
+      --bg1:#050505;
+      --bg2:#121212;
+      --accent:#ffcc00;
+      --accent-dark:#e6ac00;
+      --card:#0d0d0d;
+      --muted:#cfcfcf;
+      --success:#00b894;
     }
 
-    .container {
-      background: #0d0d0d;
-      padding: 30px;
-      border-radius: 15px;
-      max-width: 550px;
-      width: 100%;
-      box-shadow: 0 0 40px rgba(255, 204, 0, 0.7);
-      animation: fadeIn 1.2s ease;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background:linear-gradient(135deg,var(--bg1) 0%, var(--bg2) 100%);
+      color:#fff;
+      padding:24px;
     }
 
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(25px);}
-      to {opacity: 1; transform: translateY(0);}
+    .card{
+      width:100%;
+      max-width:760px;
+      border-radius:14px;
+      padding:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 60px rgba(255,204,0,0.06);
+      overflow:hidden;
     }
 
-    h2 {
-      text-align: center;
-      color: #ffcc00;
-      margin-bottom: 20px;
+    h1{
+      margin:0 0 12px 0;
+      font-size:20px;
+      color:var(--accent);
+      text-align:center;
+      letter-spacing:0.2px;
+    }
+    p.lead{margin:0 0 18px 0;color:var(--muted);text-align:center}
+
+    .columns{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:18px;
+    }
+    @media (max-width:760px){ .columns{grid-template-columns:1fr;} }
+
+    label{display:block;font-size:13px;color:#ddd;margin-bottom:6px}
+    input[type="text"], input[type="email"], select, textarea, input[type="file"]{
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:#0b0b0b;
+      color:#fff;
+      font-size:14px;
+    }
+    textarea{min-height:86px;resize:vertical}
+
+    .btn{
+      display:inline-block;
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      background:linear-gradient(90deg,var(--accent) 0%, var(--accent-dark) 100%);
+      color:#111;
+      font-weight:700;
+      cursor:pointer;
+      font-size:15px;
+      margin-top:8px;
     }
 
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: bold;
-      color: #ddd;
-    }
+    .muted{color:var(--muted);font-size:13px;margin-top:8px}
 
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 14px;
-      margin-bottom: 12px;
-      background: #1a1a1a;
-      color: #fff;
+    .iban-box{
+      background:#080808;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid rgba(255,204,0,0.06);
+      color:var(--accent);
+      font-size:14px;
     }
+    .iban-row{display:flex;gap:10px;align-items:center;margin:8px 0}
+    .iban-row strong{display:block;color:#fff;font-size:14px}
+    .iban-small{font-size:13px;color:#ddd}
 
-    button {
-      background: linear-gradient(90deg, #ffcc00, #ffaa00);
-      border: none;
-      padding: 14px;
-      width: 100%;
-      margin-top: 15px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
+    .hidden{display:none!important}
+
+    .center{text-align:center}
+    .top-row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .flag{font-size:18px;margin-right:6px}
+
+    /* loader overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,0.55);
+      z-index:9999;
+      color:#fff;
+      flex-direction:column;
+      gap:12px;
     }
-
-    button:hover {
-      background: linear-gradient(90deg, #ffaa00, #ff8800);
+    .spinner{
+      width:52px;height:52px;border-radius:50%;border:6px solid rgba(255,255,255,0.08);border-top-color:var(--accent);
+      animation:spin 1s linear infinite;
     }
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-    .hidden { display: none; }
-
-    .iban-box {
-      background: #111;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 15px;
-      color: #ffcc00;
-      font-size: 15px;
-      line-height: 1.6;
-    }
-
-    .iban-box p {
-      margin: 6px 0;
-    }
-
-    .success {
-      text-align: center;
-    }
-
-    .success button {
-      margin: 10px 0;
-    }
+    .success-card{padding:18px;border-radius:10px;background:linear-gradient(90deg, rgba(0,200,132,0.06), rgba(0,150,136,0.03)); color:#bff6df}
+    .actions{display:flex;gap:10px;margin-top:12px}
+    .actions .btn{flex:1}
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Etapa 1 -->
+  <div class="card" role="main">
+    <h1>Reserva — Webinar de Introdução à Experiência do Cliente (CX)</h1>
+    <p class="lead">Preencha os seus dados. Depois escolha a forma de pagamento e envie tudo pelo WhatsApp.</p>
+
+    <!-- ETAPA 1 -->
     <div id="step1">
-      <h2>Reserva no Webinar CX</h2>
-      <form id="form1" enctype="multipart/form-data" method="POST" action="send.php">
-        <label>Nome</label>
-        <input type="text" name="nome" required>
+      <div class="columns">
+        <div>
+          <label>Nome</label>
+          <input id="nome" type="text" placeholder="Seu nome completo" required>
 
-        <label>WhatsApp</label>
-        <input type="text" name="whatsapp" required>
+          <label style="margin-top:12px">WhatsApp</label>
+          <input id="whatsapp" type="text" placeholder="+244 9xx xxx xxx" required>
 
-        <label>Email</label>
-        <input type="email" name="email" required>
+          <label style="margin-top:12px">E-mail</label>
+          <input id="email" type="email" placeholder="seu@exemplo.com" required>
+        </div>
 
-        <label>País</label>
-        <select name="pais" required>
-          <option value="">-- Selecione --</option>
-          <option value="Moçambique">🇲🇿 Moçambique</option>
-          <option value="Angola">🇦🇴 Angola</option>
-          <option value="Portugal">🇵🇹 Portugal</option>
-          <option value="Brasil">🇧🇷 Brasil</option>
-        </select>
+        <div>
+          <label>País</label>
+          <select id="pais" required>
+            <option value="">-- Selecione --</option>
+            <option value="Angola">🇦🇴 Angola</option>
+            <option value="Moçambique">🇲🇿 Moçambique</option>
+            <option value="Portugal">🇵🇹 Portugal</option>
+            <option value="Brasil">🇧🇷 Brasil</option>
+          </select>
 
-        <label>Objetivo</label>
-        <textarea name="objetivo" rows="3"></textarea>
-
-        <button type="button" onclick="nextStep()">Seguinte</button>
-      </form>
-    </div>
-
-    <!-- Etapa 2 -->
-    <div id="step2" class="hidden">
-      <h2>Dados para Pagamento</h2>
-      <div class="iban-box">
-        <p>🇲🇿 <strong>Moçambique</strong><br>IBAN: <b>MZ59004300000003384300625</b></p>
-        <p>🇦🇴 <strong>Angola</strong><br>IBAN: <b>0040.0000.8793.3704.1014.2</b></p>
-        <p>🇵🇹 <strong>Portugal</strong><br>IBAN: <b>PT50 0007 0000 0067 0559 5462 3</b></p>
-        <p>🇧🇷 <strong>Brasil</strong><br>PIX/Transferência – Solicitar detalhes por email.</p>
+          <label style="margin-top:12px">Objetivo</label>
+          <textarea id="objetivo" placeholder="O que pretende aprender / objetivo com o webinar"></textarea>
+        </div>
       </div>
 
-      <label>Upload do Comprovativo</label>
-      <input type="file" name="comprovativo" required>
-
-      <button type="submit" form="form1">Enviar</button>
+      <div style="margin-top:14px;">
+        <button id="btnNext" class="btn">Seguinte — Escolher pagamento</button>
+        <p class="muted center">Ao avançar será apresentada a tabela de IBANs e valores.</p>
+      </div>
     </div>
 
-    <!-- Sucesso -->
-    <div id="success" class="hidden success">
-      <h2>Obrigado pela sua inscrição!</h2>
-      <p>Recebemos os seus dados e comprovativo.</p>
-      <button onclick="window.location.href='mailto:info@onlyvibes.online'">Entrar em contacto</button>
-      <button onclick="window.location.href='/'">Voltar ao site</button>
+    <!-- ETAPA 2 -->
+    <div id="step2" class="hidden">
+      <h2 style="color:var(--accent);font-size:18px;margin:6px 0">Dados para Pagamento</h2>
+
+      <div class="iban-box" id="ibans">
+        <div class="iban-row">
+          <div><span class="flag">🇲🇿</span><strong>Moçambique</strong></div>
+          <div style="margin-left:auto" class="iban-small">IBAN: <b>MZ59004300000003384300625</b></div>
+        </div>
+        <div class="iban-row">
+          <div><span class="flag">🇦🇴</span><strong>Angola</strong></div>
+          <div style="margin-left:auto" class="iban-small">IBAN: <b>0040.0000.8793.3704.1014.2</b></div>
+        </div>
+        <div class="iban-row">
+          <div><span class="flag">🇵🇹</span><strong>Portugal</strong></div>
+          <div style="margin-left:auto" class="iban-small">IBAN: <b>PT50 0007 0000 0067 0559 5462 3</b></div>
+        </div>
+        <div class="iban-row">
+          <div><span class="flag">🇧🇷</span><strong>Brasil</strong></div>
+          <div style="margin-left:auto" class="iban-small">Sem PIX — solicitar detalhes por WhatsApp</div>
+        </div>
+
+        <hr style="border:0;border-top:1px dashed rgba(255,255,255,0.04);margin:10px 0">
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">🇦🇴 Kwanza: <b>25,000</b></div>
+          <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">🇲🇿 Metical: <b>1,700</b></div>
+          <div style="padding:8px;background:rgba(255,255,255,0.02);border-radius:8px">🇵🇹 Euro: <b>23</b></div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <label>Selecione a conta para depósito</label>
+        <select id="contaSelecionada">
+          <option value="Moçambique">🇲🇿 Moçambique — MZ59004300000003384300625</option>
+          <option value="Angola">🇦🇴 Angola — 0040.0000.8793.3704.1014.2</option>
+          <option value="Portugal">🇵🇹 Portugal — PT50 0007 0000 0067 0559 5462 3</option>
+          <option value="Brasil">🇧🇷 Brasil — Solicitar detalhes por WhatsApp</option>
+        </select>
+
+        <label style="margin-top:12px">Upload do comprovativo (opcional)</label>
+        <input id="comprovativo" type="file" accept="image/*,application/pdf">
+
+        <p class="muted">Recomendado: enviar também o comprovativo como anexo diretamente no WhatsApp depois de abrir o chat, caso o upload falhe.</p>
+
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button id="btnBack" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff">Voltar</button>
+          <button id="btnSend" class="btn" style="flex:1">Enviar pelo WhatsApp</button>
+        </div>
+      </div>
     </div>
+
+    <!-- SUCESSO / OBRIGADO -->
+    <div id="stepSuccess" class="hidden center">
+      <div class="success-card">
+        <h3 style="margin:0;color:var(--accent)">Obrigado! Preparámos a sua mensagem.</h3>
+        <p style="margin:8px 0;color:#d7f6e6">Será aberta a conversa no WhatsApp com todas as informações — confirme e envie (pode anexar o comprovativo manualmente se preferir).</p>
+        <div class="actions">
+          <button id="btnContact" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.07);color:#fff">Entrar em contacto</button>
+          <button id="btnBackSite" class="btn">Voltar ao site</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <script>
-    function nextStep() {
-      document.getElementById("step1").classList.add("hidden");
-      document.getElementById("step2").classList.remove("hidden");
+  <!-- overlay processing -->
+  <div id="overlay" class="overlay hidden" aria-hidden="true">
+    <div class="spinner" aria-hidden="true"></div>
+    <div>A processar — por favor aguarde...</div>
+  </div>
+
+<script>
+  // Config
+  const WA_NUMBER = "244952670034"; // sem +, sem espaços
+  const MIN_PROCESS_MS = 2500; // tempo mínimo de "processamento" (ms)
+
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const stepSuccess = document.getElementById('stepSuccess');
+  const overlay = document.getElementById('overlay');
+
+  const btnNext = document.getElementById('btnNext');
+  const btnBack = document.getElementById('btnBack');
+  const btnSend = document.getElementById('btnSend');
+  const btnContact = document.getElementById('btnContact');
+  const btnBackSite = document.getElementById('btnBackSite');
+
+  // Inputs
+  const nomeEl = document.getElementById('nome');
+  const whatsappEl = document.getElementById('whatsapp');
+  const emailEl = document.getElementById('email');
+  const paisEl = document.getElementById('pais');
+  const objetivoEl = document.getElementById('objetivo');
+  const comprovativoEl = document.getElementById('comprovativo');
+  const contaSel = document.getElementById('contaSelecionada');
+
+  btnNext.addEventListener('click', () => {
+    // validação simples
+    if(!nomeEl.value.trim()){ alert('Por favor escreva o seu nome.'); nomeEl.focus(); return; }
+    if(!whatsappEl.value.trim()){ alert('Por favor escreva o seu WhatsApp.'); whatsappEl.focus(); return; }
+    if(!emailEl.value.trim()){ alert('Por favor insira o seu email.'); emailEl.focus(); return; }
+    if(!paisEl.value){ alert('Por favor selecione o seu país.'); paisEl.focus(); return; }
+
+    // Avança para a etapa 2
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+
+    // ajustar conta selecionada por defeito
+    // (opcional) marcar a conta correspondente ao país selecionado
+    if(paisEl.value === 'Angola') contaSel.value = 'Angola';
+    if(paisEl.value === 'Moçambique') contaSel.value = 'Moçambique';
+    if(paisEl.value === 'Portugal') contaSel.value = 'Portugal';
+  });
+
+  btnBack.addEventListener('click', () => {
+    step2.classList.add('hidden');
+    step1.classList.remove('hidden');
+  });
+
+  // upload endpoint (coloque upload.php no mesmo diretório)
+  const UPLOAD_ENDPOINT = 'upload.php'; // se não quiser upload no servidor, deixe como null
+
+  async function uploadFile(file){
+    if(!UPLOAD_ENDPOINT) return { success:false, url:null };
+
+    const fd = new FormData();
+    fd.append('comprovativo', file);
+    try {
+      const res = await fetch(UPLOAD_ENDPOINT, { method:'POST', body: fd });
+      const data = await res.json();
+      return data; // espera { success:true, url:"..." }
+    } catch(err){
+      console.error('upload failed', err);
+      return { success:false };
     }
-  </script>
+  }
+
+  btnSend.addEventListener('click', async () => {
+    const start = Date.now();
+    overlay.classList.remove('hidden');
+    overlay.setAttribute('aria-hidden','false');
+
+    // gather data
+    const nome = nomeEl.value.trim();
+    const whatsappUser = whatsappEl.value.trim();
+    const email = emailEl.value.trim();
+    const pais = paisEl.value;
+    const objetivo = objetivoEl.value.trim();
+    const conta = contaSel.value;
+    const file = comprovativoEl.files[0] || null;
+
+    // escolher valor por país
+    const valores = {
+      'Angola': '🇦🇴 Kwanza: 25,000',
+      'Moçambique': '🇲🇿 Metical: 1,700',
+      'Portugal': '🇵🇹 Euro: 23',
+      'Brasil': '🇧🇷 Solicitar detalhes (sem PIX)'
+    };
+    const valorText = valores[conta] || '';
+
+    // tenta fazer upload do comprovativo (se existir)
+    let comprovativoURL = null;
+    if(file){
+      const upRes = await uploadFile(file);
+      if(upRes && upRes.success && upRes.url) comprovativoURL = upRes.url;
+    }
+
+    // criar mensagem personalizada
+    let message = [];
+    message.push('🟡 *Nova Reserva — Webinar CX*');
+    message.push('');
+    message.push(`*Nome:* ${nome}`);
+    message.push(`*WhatsApp:* ${whatsappUser}`);
+    message.push(`*Email:* ${email}`);
+    message.push(`*País:* ${pais}`);
+    if(objetivo) message.push(`*Objetivo:* ${objetivo}`);
+    message.push('');
+    message.push('*Método de pagamento escolhido:* ' + conta);
+    message.push('*Valor sugerido:* ' + valorText);
+    if(conta === 'Moçambique') message.push('IBAN: MZ59004300000003384300625');
+    if(conta === 'Angola') message.push('IBAN: 0040.0000.8793.3704.1014.2');
+    if(conta === 'Portugal') message.push('IBAN: PT50 0007 0000 0067 0559 5462 3');
+    if(conta === 'Brasil') message.push('Brasil — solicite detalhes por WhatsApp (sem PIX).');
+
+    if(comprovativoURL){
+      message.push('');
+      message.push('*Comprovativo (anexado):* ' + comprovativoURL);
+      message.push('');
+      message.push('Enviei o comprovativo através do formulário. Por favor confirmar recepção.');
+    } else {
+      message.push('');
+      message.push('*Comprovativo:* (anexe o comprovativo na conversa do WhatsApp se já tiver efectuado o pagamento)');
+    }
+
+    message.push('');
+    message.push('Obrigado. — Webinar CX');
+
+    const text = message.join('\n');
+
+    // garante que o overlay fique pelo menos MIN_PROCESS_MS
+    const elapsed = Date.now() - start;
+    const wait = Math.max(0, MIN_PROCESS_MS - elapsed);
+    await new Promise(r => setTimeout(r, wait));
+
+    // abrir WhatsApp
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+
+    overlay.classList.add('hidden');
+    overlay.setAttribute('aria-hidden','true');
+
+    // mostrar página de obrigado no mesmo local (ou redirecionar)
+    step2.classList.add('hidden');
+    stepSuccess.classList.remove('hidden');
+  });
+
+  // success actions
+  btnContact.addEventListener('click', () => {
+    // abrir conversa no WhatsApp com o número oficial
+    window.open(`https://wa.me/${WA_NUMBER}`, '_blank');
+  });
+  btnBackSite.addEventListener('click', () => {
+    window.location.href = '/';
+  });
+</script>
 </body>
 </html>
