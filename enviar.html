@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reserva Webinar CX</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #0d0d0d;
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 550px;
+      width: 100%;
+      box-shadow: 0 0 40px rgba(255, 204, 0, 0.7);
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(25px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+      text-align: center;
+      color: #ffcc00;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+      color: #ddd;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      margin-bottom: 12px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    button {
+      background: linear-gradient(90deg, #ffcc00, #ffaa00);
+      border: none;
+      padding: 14px;
+      width: 100%;
+      margin-top: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #ffaa00, #ff8800);
+    }
+
+    .hidden { display: none; }
+
+    .iban-box {
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      color: #ffcc00;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .iban-box p {
+      margin: 6px 0;
+    }
+
+    .success {
+      text-align: center;
+    }
+
+    .success button {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Etapa 1 -->
+    <div id="step1">
+      <h2>Reserva no Webinar CX</h2>
+      <form id="form1" enctype="multipart/form-data" method="POST" action="send.php">
+        <label>Nome</label>
+        <input type="text" name="nome" required>
+
+        <label>WhatsApp</label>
+        <input type="text" name="whatsapp" required>
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>País</label>
+        <select name="pais" required>
+          <option value="">-- Selecione --</option>
+          <option value="Moçambique">🇲🇿 Moçambique</option>
+          <option value="Angola">🇦🇴 Angola</option>
+          <option value="Portugal">🇵🇹 Portugal</option>
+          <option value="Brasil">🇧🇷 Brasil</option>
+        </select>
+
+        <label>Objetivo</label>
+        <textarea name="objetivo" rows="3"></textarea>
+
+        <button type="button" onclick="nextStep()">Seguinte</button>
+      </form>
+    </div>
+
+    <!-- Etapa 2 -->
+    <div id="step2" class="hidden">
+      <h2>Dados para Pagamento</h2>
+      <div class="iban-box">
+        <p>🇲🇿 <strong>Moçambique</strong><br>IBAN: <b>MZ59004300000003384300625</b></p>
+        <p>🇦🇴 <strong>Angola</strong><br>IBAN: <b>0040.0000.8793.3704.1014.2</b></p>
+        <p>🇵🇹 <strong>Portugal</strong><br>IBAN: <b>PT50 0007 0000 0067 0559 5462 3</b></p>
+        <p>🇧🇷 <strong>Brasil</strong><br>PIX/Transferência – Solicitar detalhes por email.</p>
+      </div>
+
+      <label>Upload do Comprovativo</label>
+      <input type="file" name="comprovativo" required>
+
+      <button type="submit" form="form1">Enviar</button>
+    </div>
+
+    <!-- Sucesso -->
+    <div id="success" class="hidden success">
+      <h2>Obrigado pela sua inscrição!</h2>
+      <p>Recebemos os seus dados e comprovativo.</p>
+      <button onclick="window.location.href='mailto:info@onlyvibes.online'">Entrar em contacto</button>
+      <button onclick="window.location.href='/'">Voltar ao site</button>
+    </div>
+  </div>
+
+  <script>
+    function nextStep() {
+      document.getElementById("step1").classList.add("hidden");
+      document.getElementById("step2").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
