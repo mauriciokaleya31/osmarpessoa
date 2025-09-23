@@ -24,7 +24,6 @@
       position: relative;
     }
 
-    /* fundo com imagem */
     body::before {
       content: "";
       position: absolute;
@@ -34,7 +33,6 @@
       z-index: 0;
     }
 
-    /* partículas */
     #particles {
       position: absolute;
       inset: 0;
@@ -136,7 +134,6 @@
     .hidden { display: none !important; }
     .center { text-align: center; }
 
-    /* overlay */
     .overlay {
       position: fixed;
       inset: 0;
@@ -226,26 +223,21 @@
       <p>Será aberta a conversa no WhatsApp com todas as informações.</p>
       <br>
       <br>
-<a href="index.html" class="btn-back">Voltar ao site</a>
-
-<style>
-  .btn-back {
-    display: inline-block;
-    background-color: #EAB100; /* fundo do botão */
-    color: #000000; /* texto preto */
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition: background 0.3s ease;
-  }
-
-  .btn-back:hover {
-    background-color: #cf9700; /* cor mais escura no hover */
-  }
-</style>
-
+      <a href="index.html" class="btn-back">Voltar ao site</a>
+      <style>
+        .btn-back {
+          display: inline-block;
+          background-color: #EAB100;
+          color: #000000;
+          padding: 10px 20px;
+          border-radius: 8px;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 16px;
+          transition: background 0.3s ease;
+        }
+        .btn-back:hover { background-color: #cf9700; }
+      </style>
     </div>
   </div>
 
@@ -258,7 +250,6 @@
   const WA_NUMBER = "244952670034";
   const MIN_PROCESS_MS = 2000;
 
-  // contador até 8/10/2025
   const deadline = new Date("2025-10-08T19:00:00").getTime();
   const contadorEl = document.getElementById("contador");
   setInterval(()=>{
@@ -271,7 +262,6 @@
     contadorEl.textContent=`Faltam ${d}d ${h}h ${m}m ${s}s`;
   },1000);
 
-  // etapas
   const step1=document.getElementById("step1");
   const step2=document.getElementById("step2");
   const stepSuccess=document.getElementById("stepSuccess");
@@ -308,14 +298,16 @@
     ].join("\n");
     const elapsed=Date.now()-start;
     await new Promise(r=>setTimeout(r,Math.max(0,MIN_PROCESS_MS-elapsed)));
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank");
+
+    // ✅ compatível com iPhone
+    window.location.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+
     overlay.classList.add("hidden");
     step2.classList.add("hidden");
     stepSuccess.classList.remove("hidden");
   }
   document.getElementById("btnBackSite").onclick=()=>location.href="/";
 
-  // partículas animadas
   const canvas=document.getElementById("particles");
   const ctx=canvas.getContext("2d");
   let w,h;function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
